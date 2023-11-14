@@ -1,6 +1,7 @@
 import { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController.js";
 import { projectsService } from "../services/ProjectsService.js";
+import { sprintsService } from "../services/SprintsService.js";
 
 export class ProjectsController extends BaseController {
   constructor () {
@@ -36,8 +37,15 @@ export class ProjectsController extends BaseController {
     }
   }
 
-  getSprintsByProjectId(arg0, getSprintsByProjectId) {
-    throw new Error("Method not implemented.");
+  async getSprintsByProjectId(req, res, next) {
+    try {
+      const projectId = req.params.projectId
+      const userId = req.userInfo.id
+      const sprints = await sprintsService.getSprintsByProjectId(projectId, userId)
+      return res.send(sprints)
+    } catch (error) {
+      next(error)
+    }
   }
 
   async createProject(req, res, next) {
