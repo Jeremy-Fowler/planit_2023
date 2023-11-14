@@ -11,7 +11,6 @@ class ProjectsService {
   async getProjectById(projectId, userId) {
     const project = await dbContext.Projects.findById(projectId).populate('creator', 'name picture')
     if (!project) { throw new BadRequest(`Invalid id: ${projectId}`) }
-    if (project.creatorId.toString() != userId) { throw new Forbidden("NOT YOUR PROJECT") }
     return project
   }
   async createProject(projectData) {
