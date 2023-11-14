@@ -9,6 +9,10 @@ export const TaskSchema = new Schema(
     creatorId: { type: Schema.Types.ObjectId, required: true, ref: 'Account' },
     isComplete: { type: Boolean, required: true, default: false },
     completedOn: { type: Date, min: new Date() }
+  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true }
   }
 )
 

@@ -2,6 +2,7 @@ import { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController.js";
 import { projectsService } from "../services/ProjectsService.js";
 import { sprintsService } from "../services/SprintsService.js";
+import { tasksService } from "../services/TasksService.js";
 
 export class ProjectsController extends BaseController {
   constructor () {
@@ -11,10 +12,10 @@ export class ProjectsController extends BaseController {
       .get('', this.getProjectsByUserId)
       .get('/:projectId', this.getProjectById)
       .get('/:projectId/sprints', this.getSprintsByProjectId)
+      .get('/:projectId/tasks', this.getTasksByProjectId)
       .post('', this.createProject)
       .delete('/:projectId', this.destroyProject)
   }
-
 
 
   async getProjectsByUserId(req, res, next) {
@@ -40,13 +41,23 @@ export class ProjectsController extends BaseController {
   async getSprintsByProjectId(req, res, next) {
     try {
       const projectId = req.params.projectId
-      const userId = req.userInfo.id
-      const sprints = await sprintsService.getSprintsByProjectId(projectId, userId)
+      const sprints = await sprintsService.getSprintsByProjectId(projectId)
       return res.send(sprints)
     } catch (error) {
       next(error)
     }
   }
+
+  async getTasksByProjectId(req, res, next) {
+    try {
+      const projectId = req.params.projectId
+      const tasks = await tasksService.getTasksByProjectId(projectId)
+      return res.send(tasks)
+    } catch (error) {
+      next(error)
+    }
+  }
+
 
   async createProject(req, res, next) {
     try {

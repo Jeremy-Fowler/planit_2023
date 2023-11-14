@@ -3,8 +3,7 @@ import { BadRequest, Forbidden } from "../utils/Errors.js"
 import { projectsService } from "./ProjectsService.js"
 
 class SprintsService {
-  async getSprintsByProjectId(projectId, userId) {
-    await projectsService.getProjectById(projectId, userId)
+  async getSprintsByProjectId(projectId) {
     const sprints = await dbContext.Sprints.find({ projectId }).populate('creator', 'name picture')
     return sprints
   }
