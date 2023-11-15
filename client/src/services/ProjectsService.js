@@ -18,6 +18,14 @@ class ProjectsService {
     AppState.activeProject = newProject
   }
 
+  async createProject(projectData) {
+    const res = await api.post('api/projects', projectData)
+    logger.log('CREATED PROJECT', res.data)
+    const newProject = new Project(res.data)
+    AppState.myProjects.push(newProject)
+    return newProject
+  }
+
   async destroyProject(projectId) {
     const res = await api.delete(`api/projects/${projectId}`)
     logger.log('DESTROYED PROJECT', res.data)

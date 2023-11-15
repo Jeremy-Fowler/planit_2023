@@ -9,6 +9,13 @@
         </h1>
         <p>{{ project.description }}</p>
       </div>
+      <div class="col-12 d-flex justify-content-between align-items-end">
+        <div>
+          <h2 class="fs-4 text-info">Sprints</h2>
+          <p class="mb-0">Group your tasks into sprints for over-arching collections for better organization.</p>
+        </div>
+        <button class="btn btn-info px-5">Add Sprint</button>
+      </div>
     </section>
   </div>
   <div v-else class="container">
@@ -27,6 +34,7 @@ import { useRoute, useRouter } from 'vue-router';
 import Pop from '../utils/Pop.js';
 import { projectsService } from '../services/ProjectsService.js';
 import { AppState } from '../AppState.js'
+import { sprintsService } from '../services/SprintsService.js';
 export default {
   setup() {
     const route = useRoute()
@@ -34,6 +42,7 @@ export default {
     const watchableProjectId = ref(route.params.projectId)
     watch(watchableProjectId, () => {
       getProjectById()
+      getSprintsByProjectId()
     },
       { immediate: true }
     )
@@ -45,6 +54,16 @@ export default {
         Pop.error((error))
       }
     }
+
+    async function getSprintsByProjectId() {
+      try {
+        const projectId = watchableProjectId.value
+        await sprintsService.getSprintsByProjectId(projectId)
+      } catch (error) {
+        Pop.error(error)
+      }
+    }
+
     return {
       project: computed(() => AppState.activeProject),
       account: computed(() => AppState.account),
@@ -59,7 +78,7 @@ export default {
         } catch (error) {
           Pop.error(error)
         }
-      }
+      },
     }
   }
 }

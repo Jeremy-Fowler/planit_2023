@@ -8,12 +8,14 @@
   <footer class="bg-dark text-light">
     Made with 💖 by CodeWorks
   </footer>
+  <ProjectFormModal />
 </template>
 
 <script>
 import { computed } from 'vue'
 import { AppState } from './AppState'
 import Navbar from './components/Navbar.vue'
+import ProjectFormModal from './components/ProjectFormModal.vue'
 
 export default {
   setup() {
@@ -21,7 +23,7 @@ export default {
       appState: computed(() => AppState)
     }
   },
-  components: { Navbar }
+  components: { Navbar, ProjectFormModal }
 }
 </script>
 <style lang="scss">

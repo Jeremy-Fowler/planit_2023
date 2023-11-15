@@ -7,7 +7,8 @@
           <p>A list of all of the projects for {{ account.name }}</p>
         </div>
         <div class="text-end">
-          <button class="btn btn-info px-5">Create Project</button>
+          <button type="button" data-bs-toggle="modal" data-bs-target="#projectFormModal" class="btn btn-info px-5">Create
+            Project</button>
         </div>
       </div>
       <div class="col-12">
