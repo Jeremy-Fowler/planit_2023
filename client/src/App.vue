@@ -8,14 +8,26 @@
   <footer class="bg-dark text-light">
     Made with 💖 by CodeWorks
   </footer>
-  <ProjectFormModal />
+
+  <ModalComponent :modalId="'projectFormModal'">
+
+    <template #modalHeader>
+      Create Project
+    </template>
+
+    <template #modalBody>
+      <ProjectForm />
+    </template>
+
+  </ModalComponent>
 </template>
 
 <script>
 import { computed } from 'vue'
 import { AppState } from './AppState'
 import Navbar from './components/Navbar.vue'
-import ProjectFormModal from './components/ProjectFormModal.vue'
+import ModalComponent from './components/ModalComponent.vue'
+import ProjectForm from './components/ProjectForm.vue'
 
 export default {
   setup() {
@@ -23,7 +35,7 @@ export default {
       appState: computed(() => AppState)
     }
   },
-  components: { Navbar, ProjectFormModal }
+  components: { Navbar, ModalComponent, ProjectForm }
 }
 </script>
 <style lang="scss">
