@@ -82,7 +82,8 @@ export default {
     watch(watchableProjectId, () => {
       getProjectById();
       getSprintsByProjectId();
-      getTasksByProjectId()
+      getTasksByProjectId();
+      getNotesByProjectId();
     }, { immediate: true });
 
     async function getProjectById() {
