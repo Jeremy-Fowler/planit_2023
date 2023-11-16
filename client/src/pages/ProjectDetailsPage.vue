@@ -38,14 +38,24 @@
 
   </ModalComponent>
 
-  <ModalComponent :modalId="'taskFormModal'">
+  <ModalComponent :modalId="'taskFormModal'" :modalSize="'modal-lg'">
 
     <template #modalHeader>Create Task</template>
     <template #modalBody>
-      <SprintForm />
+      <TaskForm />
     </template>
 
   </ModalComponent>
+
+  <OffcanvasComponent :offcanvasId="'taskDetailsOffcanvas'" :offcanvasPlacement="'offcanvas-end'">
+    <template v-if="activeTask" #offcanvasTitle>
+      {{ activeTask.name }}
+    </template>
+
+    <template #offcanvasBody>
+
+    </template>
+  </OffcanvasComponent>
 </template>
 
 
@@ -59,15 +69,22 @@ import { sprintsService } from '../services/SprintsService.js';
 import ModalComponent from '../components/ModalComponent.vue';
 import SprintForm from '../components/SprintForm.vue';
 import SprintCollapse from '../components/SprintCollapse.vue';
+import TaskForm from '../components/TaskForm.vue';
+import { tasksService } from '../services/TasksService.js';
+import { notesService } from '../services/NotesService.js';
+import OffcanvasComponent from '../components/OffcanvasComponent.vue';
 export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
     const watchableProjectId = ref(route.params.projectId);
+
     watch(watchableProjectId, () => {
       getProjectById();
       getSprintsByProjectId();
+      getTasksByProjectId()
     }, { immediate: true });
+
     async function getProjectById() {
       try {
         const projectId = watchableProjectId.value;
@@ -86,10 +103,27 @@ export default {
         Pop.error(error);
       }
     }
+    async function getTasksByProjectId() {
+      try {
+        const projectId = watchableProjectId.value;
+        await tasksService.getTasksByProjectId(projectId)
+      } catch (error) {
+        Pop.error(error)
+      }
+    }
+    async function getNotesByProjectId() {
+      try {
+        const projectId = watchableProjectId.value;
+        await notesService.getNotesByProjectId(projectId)
+      } catch (error) {
+        Pop.error(error)
+      }
+    }
     return {
       project: computed(() => AppState.activeProject),
       account: computed(() => AppState.account),
       sprints: computed(() => AppState.sprints),
+      activeTask: computed(() => AppState.activeTask),
       async destroyProject() {
         try {
           const project = AppState.activeProject;
@@ -107,7 +141,7 @@ export default {
       },
     };
   },
-  components: { ModalComponent, SprintForm, SprintCollapse }
+  components: { ModalComponent, SprintForm, SprintCollapse, TaskForm, OffcanvasComponent }
 }
 </script>
 

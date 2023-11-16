@@ -9,5 +9,13 @@ export const AppState = reactive({
   myProjects: [],
   /** @type {import('./models/Project.js').Project | null} */
   activeProject: null,
-  sprints: []
+  /** @type {import('./models/Sprint.js').Sprint[]} */
+  sprints: [],
+  /** @type {import('./models/Sprint.js').Sprint | null} */
+  activeSprint: null,
+  /** @type {import('./models/Task.js').Task[]} */
+  tasks: [],
+  /** @type {import('./models/Task.js').Task | null} */
+  activeTask: null,
+  notes: []
 })

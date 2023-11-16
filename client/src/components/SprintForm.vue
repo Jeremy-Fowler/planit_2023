@@ -2,7 +2,7 @@
   <form @submit.prevent="createSprint()">
     <div class="mb-3">
       <label for="sprintName" class="form-label">Sprint Name</label>
-      <input v-model="editable.name" type="text" class="form-control" id="sprintName" required maxlength="45"
+      <input v-model="editable.name" type="text" class="form-control" id="sprintName" required maxlength="40"
         placeholder="Sprint Name...">
     </div>
 
