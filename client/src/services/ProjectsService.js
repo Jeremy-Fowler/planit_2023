@@ -34,6 +34,13 @@ class ProjectsService {
     if (projectIndex == -1) { throw new Error(`No project found with the id of ${projectId}`) }
     AppState.myProjects.splice(projectIndex, 1)
   }
+
+  clearAppState() {
+    AppState.activeProject = null
+    AppState.notes.length = 0
+    AppState.sprints.length = 0
+    AppState.tasks.length = 0
+  }
 }
 
 export const projectsService = new ProjectsService()

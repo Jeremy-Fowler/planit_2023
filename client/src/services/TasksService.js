@@ -25,8 +25,22 @@ class TasksService {
     AppState.tasks.splice(taskIndex, 1)
   }
 
+  async updateTask(taskData) {
+    const res = await api.put(`api/tasks/${taskData.id}`, taskData)
+    logger.log('UPDATED TASK', res.data)
+    const newTask = new Task(res.data)
+    AppState.activeTask = newTask
+    const taskIndex = AppState.tasks.findIndex(task => task.id == newTask.id)
+    if (taskIndex == -1) { throw new Error(`Not task found with the id of ${newTask.id}`) }
+    AppState.tasks.splice(taskIndex, 1, newTask)
+  }
+
   setActiveTask(task) {
     AppState.activeTask = task
+  }
+
+  changeEditStatus(wantsToEdit) {
+    AppState.isEditingTask = wantsToEdit
   }
 }
 

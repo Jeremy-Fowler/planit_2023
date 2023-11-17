@@ -27,9 +27,14 @@ class TasksService {
     task.weight = taskData.weight || task.weight
     task.sprintId = taskData.sprintId || task.sprintId
     task.isComplete = taskData.isComplete != undefined ? taskData.isComplete : task.isComplete
+
     if (task.isComplete && !task.completedOn) {
       task.completedOn = new Date()
     }
+    else {
+      task.completedOn = null
+    }
+
 
     await task.save()
     return task

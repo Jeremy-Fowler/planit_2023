@@ -60,7 +60,19 @@ export default {
     sprintProp: { type: Sprint, required: true }
   },
   setup(props) {
+    function getRandomColor() {
+      const colors = [
+        'success',
+        'info',
+        'warning',
+        'danger',
+        'primary',
+      ];
+      const randomIndex = Math.floor(Math.random() * colors.length);
+      return colors[randomIndex];
+    }
     return {
+      randomColor: getRandomColor(),
       tasks: computed(() => AppState.tasks.filter(task => task.sprintId == props.sprintProp.id)),
       combinedTaskWeight: computed(() => {
         let total = 0
@@ -68,17 +80,6 @@ export default {
         tasks.forEach(task => total += task.weight)
         return total
       }),
-      get randomColor() {
-        const colors = [
-          'success',
-          'info',
-          'warning',
-          'danger',
-          'primary',
-        ];
-        const randomIndex = Math.floor(Math.random() * colors.length);
-        return colors[randomIndex];
-      },
       setActiveSprint() {
         sprintsService.setActiveSprint(props.sprintProp);
       }

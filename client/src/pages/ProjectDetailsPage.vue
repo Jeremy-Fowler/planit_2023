@@ -20,7 +20,6 @@
         <SprintCollapse :sprintProp="sprint" />
       </div>
     </section>
-
   </div>
   <div v-else class="container">
     <section class="row">
@@ -29,9 +28,17 @@
       </div>
     </section>
   </div>
-  <button data-bs-toggle="offcanvas" data-bs-target="#projectsNavigationOffcanvas"
-    class="btn btn-info fs-1 projects-button" title="See your projects"><i
-      class="mdi mdi-alpha-p-circle-outline"></i></button>
+
+  <div class="settings-buttons">
+    <button data-bs-toggle="offcanvas" data-bs-target="#projectsNavigationOffcanvas"
+      class="btn mb-1 btn-info fs-1 d-block" title="See your projects" type="button">
+      <i class="mdi mdi-alpha-p-circle-outline"></i>
+    </button>
+    <button data-bs-toggle="modal" data-bs-target="#accountFormModal" class="btn btn-info fs-1 d-block"
+      title="Edit your account">
+      <i class="mdi mdi-cog-outline"></i>
+    </button>
+  </div>
 
 
   <ModalComponent :modalId="'sprintFormModal'">
@@ -48,6 +55,15 @@
     <template #modalHeader>Create Task</template>
     <template #modalBody>
       <TaskForm />
+    </template>
+
+  </ModalComponent>
+
+  <ModalComponent :modalId="'accountFormModal'">
+
+    <template #modalHeader>Edit Account</template>
+    <template #modalBody>
+      <AccountForm />
     </template>
 
   </ModalComponent>
@@ -76,11 +92,18 @@
 
   <OffcanvasComponent :offcanvasId="'taskDetailsOffcanvas'" :offcanvasPlacement="'offcanvas-end'">
     <template v-if="activeTask" #offcanvasTitle>
-      {{ activeTask.name }}
+      <span>
+        {{ activeTask.name }}
+      </span>
+
+      <button v-if="activeTask.creatorId == account.id" @click="startEditing()" class="btn btn-outline-info ms-3"
+        :title="`Edit ${activeTask.name}`">
+        <i class="mdi mdi-pencil"></i>
+      </button>
     </template>
 
     <template #offcanvasBody>
-
+      <TaskDetails />
     </template>
   </OffcanvasComponent>
 </template>
@@ -101,6 +124,8 @@ import { tasksService } from '../services/TasksService.js';
 import { notesService } from '../services/NotesService.js';
 import OffcanvasComponent from '../components/OffcanvasComponent.vue';
 import ProjectListItem from '../components/ProjectListItem.vue';
+import TaskDetails from '../components/TaskDetails.vue';
+import AccountForm from '../components/AccountForm.vue';
 export default {
   setup() {
     const route = useRoute();
@@ -108,6 +133,7 @@ export default {
     const watchableProjectId = computed(() => route.params.projectId);
 
     watch(watchableProjectId, () => {
+      projectsService.clearAppState()
       getProjectById();
       getSprintsByProjectId();
       getTasksByProjectId();
@@ -169,23 +195,26 @@ export default {
           Pop.error(error);
         }
       },
+      startEditing() {
+        tasksService.changeEditStatus(true)
+      }
 
     };
   },
-  components: { ModalComponent, SprintForm, SprintCollapse, TaskForm, OffcanvasComponent, ProjectListItem }
+  components: { ModalComponent, SprintForm, SprintCollapse, TaskForm, OffcanvasComponent, ProjectListItem, TaskDetails, AccountForm }
 }
 </script>
 
 
 <style lang="scss" scoped>
-.projects-button {
+.settings-buttons {
   position: absolute;
   left: 0;
   top: 10%;
 }
 
 @media(max-width: 768px) {
-  .projects-button {
+  .settings-buttons {
     position: static;
   }
 }

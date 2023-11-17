@@ -17,5 +17,7 @@ export const AppState = reactive({
   tasks: [],
   /** @type {import('./models/Task.js').Task | null} */
   activeTask: null,
+  isEditingTask: false,
+  /** @type {import('./models/Note.js').Note[]} */
   notes: []
 })
