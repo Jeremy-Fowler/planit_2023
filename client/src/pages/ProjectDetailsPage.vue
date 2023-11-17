@@ -20,6 +20,7 @@
         <SprintCollapse :sprintProp="sprint" />
       </div>
     </section>
+
   </div>
   <div v-else class="container">
     <section class="row">
@@ -28,6 +29,10 @@
       </div>
     </section>
   </div>
+  <button data-bs-toggle="offcanvas" data-bs-target="#projectsNavigationOffcanvas"
+    class="btn btn-info fs-1 projects-button" title="See your projects"><i
+      class="mdi mdi-alpha-p-circle-outline"></i></button>
+
 
   <ModalComponent :modalId="'sprintFormModal'">
 
@@ -47,6 +52,28 @@
 
   </ModalComponent>
 
+  <OffcanvasComponent :offcanvasId="'projectsNavigationOffcanvas'">
+    <template #offcanvasTitle>
+      <p class="fs-3 text-info">Projects</p>
+    </template>
+
+    <template #offcanvasBody>
+      <div class="container-fluid">
+        <section class="row justify-content-between">
+          <div class="col-4">
+            <p class="text-info">Name</p>
+          </div>
+          <div class="col-4">
+            <p class="text-info">Started</p>
+          </div>
+        </section>
+        <section v-for="project in myProjects" :key="project.id" class="row justify-content-between">
+          <ProjectListItem :projectProp="project" />
+        </section>
+      </div>
+    </template>
+  </OffcanvasComponent>
+
   <OffcanvasComponent :offcanvasId="'taskDetailsOffcanvas'" :offcanvasPlacement="'offcanvas-end'">
     <template v-if="activeTask" #offcanvasTitle>
       {{ activeTask.name }}
@@ -60,7 +87,7 @@
 
 
 <script>
-import { computed, ref, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Pop from '../utils/Pop.js';
 import { projectsService } from '../services/ProjectsService.js';
@@ -73,11 +100,12 @@ import TaskForm from '../components/TaskForm.vue';
 import { tasksService } from '../services/TasksService.js';
 import { notesService } from '../services/NotesService.js';
 import OffcanvasComponent from '../components/OffcanvasComponent.vue';
+import ProjectListItem from '../components/ProjectListItem.vue';
 export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const watchableProjectId = ref(route.params.projectId);
+    const watchableProjectId = computed(() => route.params.projectId);
 
     watch(watchableProjectId, () => {
       getProjectById();
@@ -122,6 +150,7 @@ export default {
     }
     return {
       project: computed(() => AppState.activeProject),
+      myProjects: computed(() => AppState.myProjects),
       account: computed(() => AppState.account),
       sprints: computed(() => AppState.sprints),
       activeTask: computed(() => AppState.activeTask),
@@ -140,11 +169,24 @@ export default {
           Pop.error(error);
         }
       },
+
     };
   },
-  components: { ModalComponent, SprintForm, SprintCollapse, TaskForm, OffcanvasComponent }
+  components: { ModalComponent, SprintForm, SprintCollapse, TaskForm, OffcanvasComponent, ProjectListItem }
 }
 </script>
 
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.projects-button {
+  position: absolute;
+  left: 0;
+  top: 10%;
+}
+
+@media(max-width: 768px) {
+  .projects-button {
+    position: static;
+  }
+}
+</style>
